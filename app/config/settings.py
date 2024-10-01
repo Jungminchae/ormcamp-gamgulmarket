@@ -13,6 +13,7 @@ class AppSettings(BaseSettings):
     OPENAPI_URL: str | None = "/openapi.json" if DEBUG else None
     API_PREFIX: str = "/api/v1"
     DB_URL: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/postgres"
+    TEST_DB_URL: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/test"
     SESSION_URL: str = "redis://localhost:6379/0"
     TIMEZONE_LOCATION: str = "Asia/Seoul"
     ALLOWED_HOSTS: list = []
