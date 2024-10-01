@@ -16,3 +16,14 @@ async def register_user(data: users_dependency.RegisterUser):
     """
     response = ResponseInterFace(result=data, message="유저 생성 완료")
     return BaseResponse(**response)
+
+
+@router.post("/login/session/", status_code=status.HTTP_200_OK)
+async def login_session(data: users_dependency.SessionLogin):
+    """
+    # 세션 로그인
+    - **email**: 이메일
+    - **password**: 비밀번호
+    """
+    response = ResponseInterFace(result=data, message="로그인 성공")
+    return BaseResponse(**response)

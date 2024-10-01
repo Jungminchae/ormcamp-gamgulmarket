@@ -1,8 +1,8 @@
-from pydantic import BaseModel, model_validator, field_validator
+from pydantic import BaseModel, EmailStr, model_validator, field_validator
 
 
 class RegisterUserRequest(BaseModel):
-    email: str | None = None
+    email: EmailStr | None = None
     password: str | None = None
     password_confirmation: str = None
 

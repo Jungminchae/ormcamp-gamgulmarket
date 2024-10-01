@@ -19,6 +19,9 @@ class AppSettings(BaseSettings):
     ALLOWED_HOSTS: list = []
     CORS_ORIGINS: list = []
 
+    MAX_SESSION_PER_USER: int = 3
+    MAX_SESSION_AGE: int = 60 * 60 * 24 * 7
+
     SWAGGER_UI_PARAMS: dict = {
         "deepLinking": True,
         "defaultModelsExpandDepth": 1,
