@@ -1,0 +1,18 @@
+# postgresql, redis 서버를 개발환경에서 사용하기 위한 docker-compose 파일
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: gamgul-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+  redis:
+    image: redis:alpine
+    container_name: gamgul-redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
