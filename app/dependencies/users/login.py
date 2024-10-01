@@ -7,6 +7,7 @@ from app.orms.users import user_orm
 from app.models.users import User
 from app.services.users.password import PasswordService
 from app.services.users.session import create_user_session
+from app.services.users.jwt import jwt_service
 from app.dependencies.users.redis import RedisSession
 
 
@@ -25,3 +26,13 @@ async def validate_user(data: Annotated[LoginRequest, Form()], db: DB) -> User:
 async def perform_session_login(vaild_user: Annotated[User, Depends(validate_user)], redis: RedisSession) -> str:
     sesseion_key = await create_user_session(redis, vaild_user.id)
     return {"key": sesseion_key}
+
+
+async def perform_jwt_login(vaild_user: Annotated[User, Depends(validate_user)]) -> str:
+    data = {"id": str(vaild_user.id)}
+    access_token = jwt_service.create_access_token(data)
+    refresh_token = jwt_service.create_refresh_token(data)
+    return {
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+    }

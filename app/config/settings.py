@@ -22,6 +22,11 @@ class AppSettings(BaseSettings):
     MAX_SESSION_PER_USER: int = 3
     MAX_SESSION_AGE: int = 60 * 60 * 24 * 7
 
+    JWT_ALGORITHM: str = "HS256"
+    JWT_SECRET_KEY: str = "secret"
+    JWT_ACCESS_TOKEN_EXPIRE_TIME: int = 60
+    JWT_REFRESH_TOKEN_EXPIRE_TIME: int = 60 * 60 * 24 * 7
+
     SWAGGER_UI_PARAMS: dict = {
         "deepLinking": True,
         "defaultModelsExpandDepth": 1,

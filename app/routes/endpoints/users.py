@@ -27,3 +27,14 @@ async def login_session(data: users_dependency.SessionLogin):
     """
     response = ResponseInterFace(result=data, message="로그인 성공")
     return BaseResponse(**response)
+
+
+@router.post("/login/jwt/", status_code=status.HTTP_200_OK)
+async def login_jwt(data: users_dependency.JWTLogin):
+    """
+    # JWT 로그인
+    - **email**: 이메일
+    - **password**: 비밀번호
+    """
+    response = ResponseInterFace(result=data, message="로그인 성공")
+    return BaseResponse(**response)
