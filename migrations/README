@@ -1,1 +1,4 @@
 Generic single-database configuration.
+
+- alembic으로 모델 만든 다음에 아래 명령어로 모델 생성함, 모델 작성 귀찮은거 안해도 돼서 편함
+  sqlacodegen postgresql+psycopg2://postgres:postgres@localhost:5432/postgres >> model_from_db.py
