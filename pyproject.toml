@@ -1,0 +1,15 @@
+[project]
+name = "gamgulmarket"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "alembic>=1.13.3",
+    "asyncpg>=0.29.0",
+    "fastapi-mctools>=0.5.0",
+    "fastapi>=0.115.0",
+    "pydantic-settings>=2.5.2",
+    "sqlalchemy[asyncio]>=2.0.35",
+    "uvicorn>=0.31.0",
+]
