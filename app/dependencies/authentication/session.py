@@ -16,10 +16,10 @@ async def validate_session(request: Request, redis: RedisSession) -> str | None:
 
     elif authorization_session:
         user_id = await redis.get(authorization_session)
-    return user_id
+    return int(user_id)
 
 
-async def get_current_session_user(user_id: Annotated[str, Depends(validate_session)], db: DB) -> dict:
+async def get_current_session_user(user_id: Annotated[int, Depends(validate_session)], db: DB) -> dict:
     if not user_id:
         return None
     user = await user_orm.get_by_filters(db, id=user_id)

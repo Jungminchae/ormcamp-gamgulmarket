@@ -38,3 +38,13 @@ async def login_jwt(data: users_dependency.JWTLogin):
     """
     response = ResponseInterFace(result=data, message="로그인 성공")
     return BaseResponse(**response)
+
+
+@router.get("/profile/", status_code=status.HTTP_200_OK)
+async def get_user_profile(data: users_dependency.GetUserProfile):
+    """
+    # 유저 프로필 조회
+    - 인증이 되어 있어야 하며 인증된 유저의 프로필을 조회합니다.
+    """
+    response = ResponseInterFace(result=data, message="프로필 조회 성공")
+    return BaseResponse(**response)
