@@ -17,8 +17,6 @@ async def get_current_user(
             detail="인증이 잘 못 되었거나 로그인이 되지 않았습니다.",
             code="UNAUTHORIZED",
         )
-    print(session_user)
-    print(jwt_user)
 
     if session_user:
         return session_user
