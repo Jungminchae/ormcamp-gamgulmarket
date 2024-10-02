@@ -5,7 +5,6 @@ from app.models.users import User, Profile
 
 class UserRead(async_base.AReadBase):
     async def get_user_profile(self, db, user_id):
-        self.model2
         query = (
             select(
                 self.model.id.label("user_id"),
@@ -25,11 +24,24 @@ class UserRead(async_base.AReadBase):
         result = await db.execute(query)
         return self.get_result(result, [])
 
+    async def get_profile_obj(self, db, user_id):
+        query = select(self.model2).where(self.model2.user_id == user_id)
+        result = await db.execute(query)
+        return self.get_result(result, [])
+
 
 class UserCreate(async_base.ACreateBase): ...
 
 
-class UserORM(UserRead, UserCreate):
+class UserUpdate(async_base.AUpdateBase):
+    async def update_profile(self, db, profile_input, profile_obj):
+        profile_obj.profile = profile_obj.profile | profile_input
+        await db.commit()
+        await db.refresh(profile_obj)
+        return profile_obj
+
+
+class UserORM(UserRead, UserCreate, UserUpdate):
     def __init__(self, model, model2):
         self.model2 = model2
         super().__init__(model)

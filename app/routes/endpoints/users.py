@@ -48,3 +48,14 @@ async def get_user_profile(data: users_dependency.GetUserProfile):
     """
     response = ResponseInterFace(result=data, message="프로필 조회 성공")
     return BaseResponse(**response)
+
+
+@router.put("/profile/", status_code=status.HTTP_200_OK)
+async def update_user_profile(data: users_dependency.UpdateUserProfile):
+    """
+    # 유저 프로필 수정
+    - 인증이 되어 있어야 하며 인증된 유저의 프로필을 수정합니다.
+    - **prlfile**: 프로필 수정 데이터 -> hstore 타입임
+    """
+    response = ResponseInterFace(result=data, message="프로필 수정 성공")
+    return BaseResponse(**response)
