@@ -84,8 +84,8 @@ class AppSettings(BaseSettings):
         },
     }
 
-    AWS_ACCESS_KEY_ID: str
-    AWS_SECRET_ACCESS_KEY: str
+    SUPABASE_URL: str
+    SUPABASE_KEY: str
 
     @property
     def TIMEZONE(self) -> ZoneInfo:

@@ -1,12 +1,14 @@
 import datetime
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 from sqlalchemy import DateTime, ForeignKeyConstraint, Integer, PrimaryKeyConstraint, String, Text, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.models.base import Base
-from app.models.users import User
+
+if TYPE_CHECKING:
+    from app.models.users import User
 
 
-class Products(Base):
+class Product(Base):
     __tablename__ = "products"
     __table_args__ = (
         ForeignKeyConstraint(["user_id"], ["users.id"], ondelete="CASCADE", name="products_user_id_fkey"),
@@ -25,4 +27,4 @@ class Products(Base):
     created_at: Mapped[Optional[datetime.datetime]] = mapped_column(DateTime, server_default=text("now()"))
     updated_at: Mapped[Optional[datetime.datetime]] = mapped_column(DateTime, server_default=text("now()"))
 
-    user: Mapped[User] = relationship(User, back_populates="products")
+    user: Mapped["User"] = relationship("User", back_populates="products")
