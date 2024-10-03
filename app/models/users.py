@@ -1,5 +1,5 @@
 import datetime
-from typing import Any, List, Optional
+from typing import Any, List, Optional, TYPE_CHECKING
 from sqlalchemy import (
     Boolean,
     DateTime,
@@ -14,6 +14,9 @@ from sqlalchemy.dialects.postgresql import HSTORE
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.ext.mutable import MutableDict
 from app.models.base import Base
+
+if TYPE_CHECKING:
+    from app.models.products import Product
 
 
 # sqlacodegen으로 생성
@@ -41,6 +44,7 @@ class User(Base):
     deleted_at: Mapped[Optional[datetime.datetime]] = mapped_column(DateTime)
 
     profiles: Mapped[List["Profile"]] = relationship("Profile", back_populates="users")
+    products: Mapped[List["Product"]] = relationship("Product", back_populates="user")
 
 
 class Profile(Base):
