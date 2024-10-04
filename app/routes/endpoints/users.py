@@ -40,7 +40,7 @@ async def login_jwt(data: users_dependency.JWTLogin):
     return BaseResponse(**response)
 
 
-@router.get("/profile/", status_code=status.HTTP_200_OK)
+@router.get("/profile/{user_id}/", status_code=status.HTTP_200_OK)
 async def get_user_profile(data: users_dependency.GetUserProfile):
     """
     # 유저 프로필 조회
@@ -50,7 +50,7 @@ async def get_user_profile(data: users_dependency.GetUserProfile):
     return BaseResponse(**response)
 
 
-@router.put("/profile/", status_code=status.HTTP_200_OK)
+@router.put("/profile/{user_id}/", status_code=status.HTTP_200_OK)
 async def update_user_profile(data: users_dependency.UpdateUserProfile):
     """
     # 유저 프로필 수정

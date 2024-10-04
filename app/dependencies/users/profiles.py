@@ -3,10 +3,10 @@ from app.db.async_session import DB
 from app.models.users import User
 from app.schemas.users.profiles import ProfileUpdateRequest
 from app.orms.users import user_orm
-from app.dependencies.authentication import auth_dependency
+from app.dependencies.permissions import permission_dependency
 
 
-async def get_user_profile(db: DB, user: auth_dependency.CurrentUser) -> User:
+async def get_user_profile(db: DB, user: permission_dependency.IsUserMyself) -> User:
     user_id = user.id
     user_profile = await user_orm.get_user_profile(db, user_id)
     user_profile = jsonable_encoder(user_profile)
@@ -15,7 +15,7 @@ async def get_user_profile(db: DB, user: auth_dependency.CurrentUser) -> User:
 
 async def update_user_profile(
     db: DB,
-    user: auth_dependency.CurrentUser,
+    user: permission_dependency.IsUserMyself,
     data: ProfileUpdateRequest,
 ) -> User:
     profile_input = data.model_dump()
