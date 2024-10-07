@@ -109,6 +109,3 @@ def downgrade() -> None:
     op.execute("DROP FUNCTION hard_delete_user")
     op.execute("DROP TRIGGER soft_delete_trigger ON users")
     op.execute("DROP TRIGGER hard_delete_trigger ON users")
-
-
-# TODO: 트리거 문제부터 해결하면 됨
