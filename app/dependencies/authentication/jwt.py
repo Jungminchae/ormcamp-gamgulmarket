@@ -36,6 +36,7 @@ async def get_current_jwt_user(
     except HTTPException as e:
         raise e
     else:
+        # TODO: is_active = True 필터 추가
         user = await user_orm.get_by_id(db, int(id))
         if user is None:
             raise HTTPException(

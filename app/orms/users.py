@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from fastapi_mctools.orms.sqlalchemy import async_base
 from app.models.users import User, Profile
 
@@ -41,7 +41,16 @@ class UserUpdate(async_base.AUpdateBase):
         return profile_obj
 
 
-class UserORM(UserRead, UserCreate, UserUpdate):
+class UserDelete(async_base.ADeleteBase):
+    async def delete_user(self, db, user_id):
+        query = delete(self.model).where(self.model.id == user_id)
+        print(query)
+        await db.execute(query)
+        await db.commit()
+        return
+
+
+class UserORM(UserRead, UserCreate, UserUpdate, UserDelete):
     def __init__(self, model, model2):
         self.model2 = model2
         super().__init__(model)

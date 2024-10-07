@@ -49,44 +49,58 @@ def upgrade() -> None:
     )
 
     op.execute("""
-    CREATE OR REPLACE FUNCTION soft_delete_user()
-    RETURNS TRIGGER AS $$
-    BEGIN
-        NEW.is_active := FALSE;
-        NEW.deleted_at := now();
-        RETURN NEW;
-    END;
-    $$ LANGUAGE plpgsql;
-    """)
+        CREATE OR REPLACE FUNCTION "public"._pgtrigger_should_ignore(
+            trigger_name NAME
+        )
+        RETURNS BOOLEAN AS $$
+            DECLARE
+                _pgtrigger_ignore TEXT[];
+                _result BOOLEAN;
+            BEGIN
+                BEGIN
+                    SELECT INTO _pgtrigger_ignore
+                        CURRENT_SETTING('pgtrigger.ignore');
+                    EXCEPTION WHEN OTHERS THEN
+                END;
+                IF _pgtrigger_ignore IS NOT NULL THEN
+                    SELECT trigger_name = ANY(_pgtrigger_ignore)
+                    INTO _result;
+                    RETURN _result;
+                ELSE
+                    RETURN FALSE;
+                END IF;
+            END;
+        $$ LANGUAGE plpgsql;
+        """)
 
     # 활성화된 사용자에 대해서만 트리거가 실행되도록 함
     op.execute("""
-    CREATE TRIGGER soft_delete_trigger
-    BEFORE DELETE ON users
-    FOR EACH ROW
-    WHEN (OLD.is_active = TRUE)  
-    EXECUTE FUNCTION soft_delete_user();
-    """)
+        CREATE OR REPLACE FUNCTION pgtrigger_soft_delete_78625()
+        RETURNS TRIGGER AS $$
+            BEGIN
+                IF ("public"._pgtrigger_should_ignore(TG_NAME) IS TRUE) THEN
+                    IF (TG_OP = 'DELETE') THEN
+                        RETURN OLD;
+                    ELSE
+                        RETURN NEW;
+                    END IF;
+                END IF;
+                IF (OLD.is_removable IS TRUE) THEN
+                    RETURN OLD;  
+                END IF;
+                UPDATE "users" SET is_active = FALSE, is_removable = TRUE, deleted_at = now()  WHERE "id" = OLD."id" AND is_removable = FALSE; RETURN NULL;
+            END;
+        $$ LANGUAGE plpgsql;
 
-    # 하드 딜리트가 가능한 사용자에 대해서만 작동 가능한 트리거
-    op.execute("""
-    CREATE OR REPLACE FUNCTION hard_delete_user()
-    RETURNS TRIGGER AS $$
-    BEGIN
-        DELETE FROM users WHERE id = OLD.id;
-        RETURN NULL;  
-    END;
-    $$ LANGUAGE plpgsql;
-    """)
+        DROP TRIGGER IF EXISTS pgtrigger_soft_delete_78625 ON "users";
+        CREATE TRIGGER pgtrigger_soft_delete_78625
+            BEFORE DELETE ON "users"
+            
+            FOR EACH ROW 
+            EXECUTE PROCEDURE pgtrigger_soft_delete_78625();
 
-    # is_active가 False이고 is_removable이 True인 사용자에 대해서만 트리거가 실행되도록 함
-    op.execute("""
-    CREATE TRIGGER hard_delete_trigger
-    BEFORE DELETE ON users
-    FOR EACH ROW
-    WHEN (OLD.is_active = FALSE and OLD.is_removable = TRUE)  
-    EXECUTE FUNCTION hard_delete_user();
-    """)
+        COMMENT ON TRIGGER pgtrigger_soft_delete_78625 ON "users" IS '6f7f1bbad00e7d3167219959189d38b83e5f7668';
+        """)
 
 
 def downgrade() -> None:
@@ -95,3 +109,6 @@ def downgrade() -> None:
     op.execute("DROP FUNCTION hard_delete_user")
     op.execute("DROP TRIGGER soft_delete_trigger ON users")
     op.execute("DROP TRIGGER hard_delete_trigger ON users")
+
+
+# TODO: 트리거 문제부터 해결하면 됨

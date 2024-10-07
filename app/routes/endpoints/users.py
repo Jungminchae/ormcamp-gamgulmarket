@@ -40,6 +40,18 @@ async def login_jwt(data: users_dependency.JWTLogin):
     return BaseResponse(**response)
 
 
+@router.delete("/resignation/{user_id}/", status_code=status.HTTP_204_NO_CONTENT)
+async def resign_user(data: users_dependency.ResignUser):
+    """
+    # 유저 탈퇴
+    - **password**: 비밀번호
+    - **password_confirm**: 비밀번호 확인
+    - **resignation_reason**: 탈퇴 사유
+
+    return -> status code: 204
+    """
+
+
 @router.get("/profile/{user_id}/", status_code=status.HTTP_200_OK)
 async def get_user_profile(data: users_dependency.GetUserProfile):
     """

@@ -42,6 +42,7 @@ class User(Base):
     created_at: Mapped[Optional[datetime.datetime]] = mapped_column(DateTime, server_default=text("now()"))
     updated_at: Mapped[Optional[datetime.datetime]] = mapped_column(DateTime, server_default=text("now()"))
     deleted_at: Mapped[Optional[datetime.datetime]] = mapped_column(DateTime)
+    resignation_reason: Mapped[Optional[str]] = mapped_column(String(255))
 
     profiles: Mapped[List["Profile"]] = relationship("Profile", back_populates="users")
     products: Mapped[List["Product"]] = relationship("Product", back_populates="user")
@@ -50,12 +51,12 @@ class User(Base):
 class Profile(Base):
     __tablename__ = "profiles"
     __table_args__ = (
-        ForeignKeyConstraint(["user_id"], ["users.id"], name="profiles_user_id_fkey"),
+        ForeignKeyConstraint(["user_id"], ["users.id"], name="profiles_user_id_fkey", ondelete="CASCADE"),
         PrimaryKeyConstraint("id", name="profiles_pkey"),
     )
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    user_id: Mapped[int] = mapped_column(Integer)
+    user_id: Mapped[int] = mapped_column(Integer, nullable=True)
     profile: Mapped[Optional[Any]] = mapped_column(MutableDict.as_mutable(HSTORE))
 
     users: Mapped["User"] = relationship("User", back_populates="profiles")

@@ -1,6 +1,5 @@
 import datetime
 from typing import Optional, TYPE_CHECKING
-from sqlalchemy import ARRAY
 from sqlalchemy import DateTime, ForeignKeyConstraint, Integer, PrimaryKeyConstraint, String, Text, text
 from sqlalchemy.dialects.postgresql import JSONB, ARRAY
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -8,11 +7,6 @@ from app.models.base import Base
 
 if TYPE_CHECKING:
     from app.models.users import User
-
-
-# class CastingArray(ARRAY):
-#     def bind_expression(self, bindvalue):
-#         return cast(bindvalue, self)
 
 
 class Product(Base):
