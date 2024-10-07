@@ -44,7 +44,6 @@ class UserUpdate(async_base.AUpdateBase):
 class UserDelete(async_base.ADeleteBase):
     async def delete_user(self, db, user_id):
         query = delete(self.model).where(self.model.id == user_id)
-        print(query)
         await db.execute(query)
         await db.commit()
         return
