@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, NoReturn
 from fastapi import status
 from fastapi_mctools.exceptions import HTTPException
 from app.db.async_session import DB
@@ -8,14 +8,14 @@ from app.dependencies.permissions import permission_dependency
 from app.services.users.password import PasswordService
 
 if TYPE_CHECKING:
-    from app.models.users import User
+    pass
 
 
 async def resign_user(
     db: DB,
     user: permission_dependency.IsUserMyself,
     data: ResignationRequest,
-) -> "User":
+) -> NoReturn:
     """
     PostgreSQL 레벨에서 소프트 딜리트를 수행함
     - is_active = False, deleted_at = now() 가 추가됨

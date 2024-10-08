@@ -1,13 +1,15 @@
 import os
-from typing import Annotated, TYPE_CHECKING
+from typing import Annotated, TYPE_CHECKING, NoReturn
 from collections import namedtuple
-from fastapi import Depends, UploadFile, File, Form, status
+from fastapi import Depends, Query, UploadFile, File, Form, status
 from fastapi.encoders import jsonable_encoder
 from fastapi_mctools.exceptions import HTTPException
 from app.db.async_session import DB
 from app.services.core import images
 from app.orms.products import product_orm
 from app.schemas.params import PageParams
+from app.schemas.products import ProductResponse
+from app.dependencies.permissions import permission_dependency
 from app.dependencies.authentication import auth_dependency
 from app.config.settings import settings
 
@@ -22,9 +24,9 @@ async def create_product(
     name: Annotated[str, Form(...)],
     price: Annotated[int, Form(...)],
     description: Annotated[str, Form(...)],
-    citrus_variety: Annotated[str | None, Form(...)],
-    cultivation_region: Annotated[str | None, Form(...)],
-    harvest_time: Annotated[str | None, Form(...)],
+    citrus_variety: Annotated[str | None, Form(...)] = None,
+    cultivation_region: Annotated[str | None, Form(...)] = None,
+    harvest_time: Annotated[str | None, Form(...)] = None,
 ) -> "Product":
     """
     로그인 된 유저만 상품 등록 가능
@@ -66,6 +68,7 @@ async def create_product(
 async def update_product(
     db: DB,
     product_id: int,
+    user: permission_dependency.IsProductOwner,
     image_files: Annotated[list[UploadFile] | None, File()],
     name: Annotated[str | None, Form(...)],
     price: Annotated[int | None, Form(...)],
@@ -77,6 +80,7 @@ async def update_product(
     """
     상품 수정
     """
+
     data = {}
     if image_files:
         validated_image_urls = []
@@ -117,12 +121,44 @@ async def update_product(
     return data
 
 
+async def remove_product(
+    db: DB,
+    product_id: int,
+    user: permission_dependency.IsProductOwner,
+) -> NoReturn:
+    """
+    상품 삭제
+    TODO: 삭제 같은 경우 데이터베이스에서 삭제할 때 Storage에 저장된 이미지를 삭제해야 할 수 있음
+    """
+    await product_orm.delete_product(db, product_id)
+    return
+
+
 async def read_products(
     db: DB,
+    keyword: Annotated[str | None, Query()] = None,
     page_params: PageParams = Depends(),
 ) -> list["Product"]:
     """
     상품 리스트 조회
     """
-    products = await product_orm.get_by_filters(db, page=page_params.page, page_size=page_params.page_size)
+    products = await product_orm.get_products_by_keyword_similarity(
+        db, keyword=keyword, page=page_params.page, page_size=page_params.page_size
+    )
+    count = await product_orm.get_count(db)
+
+    products = ProductResponse(total=count, page=page_params.page, data=products)
     return products
+
+
+async def retrieve_product(
+    db: DB,
+    product_id: int,
+) -> dict:
+    """
+    상품 상세 조회
+    """
+
+    product = await product_orm.get_by_id(db, product_id)
+    product = jsonable_encoder(product) if product else {}
+    return product

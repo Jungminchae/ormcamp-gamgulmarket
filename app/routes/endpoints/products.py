@@ -28,3 +28,34 @@ async def update_product(data: product_dependency.UpdateProduct):
     """
     response = ResponseInterFace(result=data, message="상품 수정 완료")
     return response
+
+
+@router.delete("/{product_id}/", status_code=status.HTTP_204_NO_CONTENT)
+async def remove_product(data: product_dependency.RemoveProduct):
+    """
+    # 상품 삭제
+    감귤 마켓에 등록된 상품을 삭제하는 API 입니다.
+    """
+
+
+@router.get("/", status_code=status.HTTP_200_OK)
+async def read_products(data: product_dependency.ReadProducts):
+    """
+    # 상품 조회
+    감귤 마켓에 등록된 상품을 조회하는 API 입니다.
+    - keyword: 검색 키워드
+    - page: 페이지 번호
+    - page_size: 페이지 크기
+    """
+    response = ResponseInterFace(result=data, message="상품 조회 완료")
+    return response
+
+
+@router.get("/{product_id}/", status_code=status.HTTP_200_OK)
+async def retrieve_product(data: product_dependency.RetrieveProduct):
+    """
+    # 상품 상세 조회
+    감귤 마켓에 등록된 상품을 상세 조회하는 API 입니다.
+    """
+    response = ResponseInterFace(result=data, message="상품 상세 조회 완료")
+    return response
