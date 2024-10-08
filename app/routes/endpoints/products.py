@@ -17,3 +17,14 @@ async def create_product(data: product_dependency.CreateProduct):
     """
     response = ResponseInterFace(result=data, message="상품 생성 완료")
     return response
+
+
+@router.put("/{product_id}/", status_code=status.HTTP_200_OK)
+async def update_product(data: product_dependency.UpdateProduct):
+    """
+    # 상품 수정
+    감귤 마켓에 상품을 수정하는 API 입니다.
+    - 모든 필드 optional이지만, 최소 하나의 필드는 수정해야 합니다.
+    """
+    response = ResponseInterFace(result=data, message="상품 수정 완료")
+    return response
