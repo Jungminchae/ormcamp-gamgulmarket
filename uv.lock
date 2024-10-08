@@ -307,6 +307,7 @@ dependencies = [
     { name = "sqlalchemy", extra = ["asyncio"] },
     { name = "supabase" },
     { name = "uvicorn" },
+    { name = "websockets" },
 ]
 
 [package.dev-dependencies]
@@ -334,6 +335,7 @@ requires-dist = [
     { name = "sqlalchemy", extras = ["asyncio"], specifier = ">=2.0.35" },
     { name = "supabase", specifier = ">=2.8.1" },
     { name = "uvicorn", specifier = ">=0.31.0" },
+    { name = "websockets", specifier = ">=13.1" },
 ]
 
 [package.metadata.requires-dev]

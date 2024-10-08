@@ -15,6 +15,7 @@ class AppSettings(BaseSettings):
     DB_URL: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/postgres"
     TEST_DB_URL: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/test"
     SESSION_URL: str = "redis://localhost:6379/0"
+    MESSAGE_BROKER_URL: str = "redis://localhost:6379/1"
     TIMEZONE_LOCATION: str = "Asia/Seoul"
     ALLOWED_HOSTS: list = []
     CORS_ORIGINS: list = []
