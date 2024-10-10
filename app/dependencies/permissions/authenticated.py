@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 
 async def is_user_myself(db: DB, user: auth_dependency.CurrentUser, user_id: int) -> "User":
-    if user.id != user_id and not user.is_superuser:
+    if (user is None) or (user.id != user_id and not user.is_superuser):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="권한이 없습니다.",
@@ -23,7 +23,7 @@ async def is_user_myself(db: DB, user: auth_dependency.CurrentUser, user_id: int
 
 async def is_product_owner(db: DB, user: auth_dependency.CurrentUser, product_id: int) -> "User":
     product = await product_orm.get_by_id(db, product_id)
-    if product.user_id != user.id and not user.is_superuser:
+    if (user is None) or (product.user_id != user.id and not user.is_superuser):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="권한이 없습니다.",

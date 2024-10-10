@@ -11,6 +11,9 @@ async def validate_session(request: Request, redis: RedisSession) -> str | None:
     if not cookie_session and not authorization_session:
         return None
 
+    if authorization_session.startswith("Bearer"):
+        return None
+
     if cookie_session:
         user_id = await redis.get(cookie_session)
 

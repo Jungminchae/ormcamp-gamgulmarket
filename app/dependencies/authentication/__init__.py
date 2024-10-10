@@ -25,5 +25,5 @@ async def get_current_user(
 
 
 auth_dependency = Dependency(
-    CurrentUser=get_current_jwt_user,
+    CurrentUser=get_current_user,
 )
