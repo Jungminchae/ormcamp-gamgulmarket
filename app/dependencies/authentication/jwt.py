@@ -1,6 +1,7 @@
 from typing import Annotated
-from fastapi import Depends, HTTPException, Request, status
+from fastapi import Depends, Request, status
 from fastapi.security.utils import get_authorization_scheme_param
+from fastapi_mctools.exceptions import HTTPException
 from app.db.async_session import DB
 from app.orms.users import user_orm
 from app.models.users import User
