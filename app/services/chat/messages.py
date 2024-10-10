@@ -84,7 +84,7 @@ class ChatMessageService:
             chat_rooms_info.append(
                 {
                     "user_id": target_user_profile[0],
-                    "user_name": target_user_profile[1],
+                    "nickname": target_user_profile[1],
                     "last_message": last_message,
                 }
             )
