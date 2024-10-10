@@ -25,3 +25,10 @@ async def get_chat_rooms(data: chat_dependency.GetChatRooms):
     """
     response = ResponseInterFace(result=data, message="유저 채팅방 목록 조회 완료")
     return ListResponse(**response)
+
+
+@router.websocket("/ws/{room_id}/")
+async def chat_endpoint(chat: chat_dependency.StartChat):
+    """
+    1:1 채팅하기
+    """
