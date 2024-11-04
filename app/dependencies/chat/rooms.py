@@ -7,7 +7,6 @@ from app.schemas.chat.rooms import ChatRoomCreateRequest
 from app.orms.users import user_orm
 from app.dependencies.core.redis import RedisMessageBroker
 from app.dependencies.authentication import auth_dependency
-from app.dependencies.permissions import permission_dependency
 from app.services.chat.messages import ChatMessageService
 from app.services.chat.connections import ConnectionService
 
@@ -39,7 +38,7 @@ async def create_chat_room(
 
 
 async def get_chat_rooms(
-    user: permission_dependency.IsUserMyself,
+    user: auth_dependency.CurrentUser,
     redis: RedisMessageBroker,
     user_id: int,
 ) -> list[dict]:

@@ -4,7 +4,7 @@ from fastapi_mctools.exceptions import HTTPException
 from app.db.async_session import DB
 from app.schemas.users.resignation import ResignationRequest
 from app.orms.users import user_orm
-from app.dependencies.permissions import permission_dependency
+from app.dependencies.authentication import auth_dependency
 from app.services.users.password import PasswordService
 
 if TYPE_CHECKING:
@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 async def resign_user(
     db: DB,
-    user: permission_dependency.IsUserMyself,
+    user: auth_dependency.CurrentUser,
     data: ResignationRequest,
 ) -> NoReturn:
     """

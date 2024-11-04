@@ -1,5 +1,5 @@
 from typing import Annotated
-from fastapi import Depends, status
+from fastapi import Depends, Request, status
 from fastapi_mctools.dependencies import Dependency
 from fastapi_mctools.exceptions import HTTPException
 from app.models.users import User
@@ -8,6 +8,7 @@ from app.dependencies.authentication.session import get_current_session_user
 
 
 async def get_current_user(
+    request: Request,
     session_user: Annotated[User, Depends(get_current_session_user)],
     jwt_user: Annotated[User, Depends(get_current_jwt_user)],
 ) -> User:
@@ -19,8 +20,10 @@ async def get_current_user(
         )
 
     if session_user:
+        request.state.user = session_user
         return session_user
     if jwt_user:
+        request.state.user = jwt_user
         return jwt_user
 
 

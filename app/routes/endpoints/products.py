@@ -1,12 +1,16 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter, Depends, status
 from fastapi_mctools.utils.responses import ResponseInterFace
 from app.dependencies.products import product_dependency
+from app.dependencies.permissions import check_product_owner_permission
 
 
 router = APIRouter()
 
 
-@router.post("/", status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/",
+    status_code=status.HTTP_201_CREATED,
+)
 async def create_product(data: product_dependency.CreateProduct):
     """
     # 상품 등록
@@ -19,7 +23,11 @@ async def create_product(data: product_dependency.CreateProduct):
     return response
 
 
-@router.put("/{product_id}/", status_code=status.HTTP_200_OK)
+@router.put(
+    "/{product_id}/",
+    status_code=status.HTTP_200_OK,
+    dependencies=[Depends(check_product_owner_permission)],
+)
 async def update_product(data: product_dependency.UpdateProduct):
     """
     # 상품 수정
@@ -30,7 +38,11 @@ async def update_product(data: product_dependency.UpdateProduct):
     return response
 
 
-@router.delete("/{product_id}/", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete(
+    "/{product_id}/",
+    status_code=status.HTTP_204_NO_CONTENT,
+    dependencies=[Depends(check_product_owner_permission)],
+)
 async def remove_product(data: product_dependency.RemoveProduct):
     """
     # 상품 삭제
@@ -38,7 +50,10 @@ async def remove_product(data: product_dependency.RemoveProduct):
     """
 
 
-@router.get("/", status_code=status.HTTP_200_OK)
+@router.get(
+    "/",
+    status_code=status.HTTP_200_OK,
+)
 async def read_products(data: product_dependency.ReadProducts):
     """
     # 상품 조회
@@ -51,7 +66,10 @@ async def read_products(data: product_dependency.ReadProducts):
     return response
 
 
-@router.get("/{product_id}/", status_code=status.HTTP_200_OK)
+@router.get(
+    "/{product_id}/",
+    status_code=status.HTTP_200_OK,
+)
 async def retrieve_product(data: product_dependency.RetrieveProduct):
     """
     # 상품 상세 조회

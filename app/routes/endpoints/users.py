@@ -1,12 +1,16 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter, Depends, status
 from fastapi_mctools.utils.responses import ResponseInterFace
 from app.dependencies.users import users_dependency
+from app.dependencies.permissions import check_user_permission
 from app.schemas import BaseResponse
 
 router = APIRouter()
 
 
-@router.post("/", status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/",
+    status_code=status.HTTP_201_CREATED,
+)
 async def register_user(data: users_dependency.RegisterUser):
     """
     # 유저 생성
@@ -18,7 +22,10 @@ async def register_user(data: users_dependency.RegisterUser):
     return BaseResponse(**response)
 
 
-@router.post("/login/session/", status_code=status.HTTP_200_OK)
+@router.post(
+    "/login/session/",
+    status_code=status.HTTP_200_OK,
+)
 async def login_session(data: users_dependency.SessionLogin):
     """
     # 세션 로그인
@@ -29,7 +36,10 @@ async def login_session(data: users_dependency.SessionLogin):
     return BaseResponse(**response)
 
 
-@router.post("/login/jwt/", status_code=status.HTTP_200_OK)
+@router.post(
+    "/login/jwt/",
+    status_code=status.HTTP_200_OK,
+)
 async def login_jwt(data: users_dependency.JWTLogin):
     """
     # JWT 로그인
@@ -40,7 +50,11 @@ async def login_jwt(data: users_dependency.JWTLogin):
     return BaseResponse(**response)
 
 
-@router.delete("/resignation/{user_id}/", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete(
+    "/resignation/{user_id}/",
+    status_code=status.HTTP_204_NO_CONTENT,
+    dependencies=[Depends(check_user_permission)],
+)
 async def resign_user(data: users_dependency.ResignUser):
     """
     # 유저 탈퇴
@@ -52,7 +66,11 @@ async def resign_user(data: users_dependency.ResignUser):
     """
 
 
-@router.get("/profile/{user_id}/", status_code=status.HTTP_200_OK)
+@router.get(
+    "/profile/{user_id}/",
+    status_code=status.HTTP_200_OK,
+    dependencies=[Depends(check_user_permission)],
+)
 async def get_user_profile(data: users_dependency.GetUserProfile):
     """
     # 유저 프로필 조회
@@ -62,7 +80,10 @@ async def get_user_profile(data: users_dependency.GetUserProfile):
     return BaseResponse(**response)
 
 
-@router.put("/profile/{user_id}/", status_code=status.HTTP_200_OK)
+@router.put(
+    "/profile/{user_id}/",
+    status_code=status.HTTP_200_OK,
+)
 async def update_user_profile(data: users_dependency.UpdateUserProfile):
     """
     # 유저 프로필 수정

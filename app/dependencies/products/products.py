@@ -9,7 +9,6 @@ from app.services.core import images
 from app.orms.products import product_orm
 from app.schemas.params import PageParams
 from app.schemas.products import ProductResponse
-from app.dependencies.permissions import permission_dependency
 from app.dependencies.authentication import auth_dependency
 from app.config.settings import settings
 
@@ -68,7 +67,7 @@ async def create_product(
 async def update_product(
     db: DB,
     product_id: int,
-    user: permission_dependency.IsProductOwner,
+    user: auth_dependency.CurrentUser,
     image_files: Annotated[list[UploadFile] | None, File()],
     name: Annotated[str | None, Form(...)],
     price: Annotated[int | None, Form(...)],
@@ -124,7 +123,7 @@ async def update_product(
 async def remove_product(
     db: DB,
     product_id: int,
-    user: permission_dependency.IsProductOwner,
+    user: auth_dependency.CurrentUser,
 ) -> NoReturn:
     """
     상품 삭제
