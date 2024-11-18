@@ -1,7 +1,7 @@
 import datetime
 from typing import Optional, TYPE_CHECKING
 from sqlalchemy import DateTime, ForeignKeyConstraint, Integer, PrimaryKeyConstraint, String, Text, text
-from sqlalchemy.dialects.postgresql import JSONB, ARRAY
+from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.models.base import Base
 
@@ -21,7 +21,7 @@ class Product(Base):
     price: Mapped[int] = mapped_column(Integer)
     user_id: Mapped[int] = mapped_column(Integer)
     description: Mapped[Optional[str]] = mapped_column(Text)
-    image_urls: Mapped[Optional[str]] = mapped_column(ARRAY(JSONB))
+    image_urls: Mapped[Optional[str]] = mapped_column(ARRAY(String(255)))
     citrus_variety: Mapped[Optional[str]] = mapped_column(String(255))
     cultivation_region: Mapped[Optional[str]] = mapped_column(String(50))
     harvest_time: Mapped[Optional[str]] = mapped_column(String(50))

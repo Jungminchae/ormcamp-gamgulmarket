@@ -50,9 +50,14 @@ async def remove_product(data: product_dependency.RemoveProduct):
     """
 
 
+from fastapi.responses import ORJSONResponse, UJSONResponse  # noqa
+from webtool.utils import MsgSpecJSONResponse  # noqa
+
+
 @router.get(
     "/",
     status_code=status.HTTP_200_OK,
+    response_class=MsgSpecJSONResponse,
 )
 async def read_products(data: product_dependency.ReadProducts):
     """
@@ -63,7 +68,8 @@ async def read_products(data: product_dependency.ReadProducts):
     - page_size: 페이지 크기
     """
     response = ResponseInterFace(result=data, message="상품 조회 완료")
-    return response
+    return MsgSpecJSONResponse(content=response.to_dict())
+    # return response
 
 
 @router.get(

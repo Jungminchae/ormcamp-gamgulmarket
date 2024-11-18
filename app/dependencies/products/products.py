@@ -146,7 +146,7 @@ async def read_products(
     )
     count = await product_orm.get_count(db)
 
-    products = ProductResponse(total=count, page=page_params.page, data=products)
+    products = ProductResponse(total=count, page=page_params.page, data=products).model_dump()
     return products
 
 
